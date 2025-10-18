@@ -7,6 +7,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
 
     steps:
     - uses: actions/checkout@v3
@@ -39,8 +43,6 @@ jobs:
       with:
         files:  |
           build/test-results/**/*.xml
-          build/test-results/**/*.trx
-          build/test-results/**/*.json
 
     - name: Clean up Gradle cache
       if: always()
