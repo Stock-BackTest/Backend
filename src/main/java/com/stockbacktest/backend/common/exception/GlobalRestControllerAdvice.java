@@ -11,21 +11,23 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalRestControllerAdvice {
 
-    @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ApiResponse<Void>> handleCustomException(CustomException e) {
-        loggingError(e);
-        ErrorCode errorCode = e.getErrorCode();
-        return ResponseEntity.status(errorCode.getStatus()).body(ApiResponse.error(errorCode.getMessage()));
-    }
+  @ExceptionHandler(CustomException.class)
+  public ResponseEntity<ApiResponse<Void>> handleCustomException(CustomException e) {
+    loggingError(e);
+    ErrorCode errorCode = e.getErrorCode();
+    return ResponseEntity.status(errorCode.getStatus())
+        .body(ApiResponse.error(errorCode.getMessage()));
+  }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<Void>> handleException(Exception e) {
-        loggingError(e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(e.getMessage()));
-    }
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ApiResponse<Void>> handleException(Exception e) {
+    loggingError(e);
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(ApiResponse.error(e.getMessage()));
+  }
 
-    private void loggingError(Exception e) {
-        log.error("message: {}", e.getMessage());
-        e.printStackTrace();
-    }
+  private void loggingError(Exception e) {
+    log.error("message: {}", e.getMessage());
+    e.printStackTrace();
+  }
 }
