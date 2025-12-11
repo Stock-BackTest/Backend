@@ -30,12 +30,12 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 @Slf4j
 public class LoggingFilter extends OncePerRequestFilter {
 
-  private static final AntPathMatcher matcher = new AntPathMatcher();
-  private static final Set<String> SENSITIVE_HEADERS = Set.of(
+  private final AntPathMatcher matcher = new AntPathMatcher();
+  private final Set<String> SENSITIVE_HEADERS = Set.of(
       "authorization", "cookie", "set-cookie", "proxy-authorization"
   );
-  public static final String CORRELATION_ID_KEY = "x-correlation-id";
-  public static final String MDC_KEY = "correlationId";
+  private final String CORRELATION_ID_KEY = "x-correlation-id";
+  private final String MDC_KEY = "correlationId";
 
   private final LoggingFilterProperties props;
 
@@ -149,7 +149,7 @@ public class LoggingFilter extends OncePerRequestFilter {
     );
   }
 
-  private static String requestContentType(HttpServletRequest req) {
+  private String requestContentType(HttpServletRequest req) {
     String ct = req.getContentType();
     if (!StringUtils.hasText(ct)) {
       ct = req.getHeader("Content-Type");
@@ -157,7 +157,7 @@ public class LoggingFilter extends OncePerRequestFilter {
     return StringUtils.hasText(ct) ? ct : null;
   }
 
-  private static String responseContentType(HttpServletResponse res) {
+  private String responseContentType(HttpServletResponse res) {
     String ct = res.getContentType();
     if (!StringUtils.hasText(ct)) {
       ct = res.getHeader("Content-Type");
@@ -165,7 +165,7 @@ public class LoggingFilter extends OncePerRequestFilter {
     return StringUtils.hasText(ct) ? ct : null;
   }
 
-  private static Integer requestContentLength(ContentCachingRequestWrapper req) {
+  private Integer requestContentLength(ContentCachingRequestWrapper req) {
     int len = req.getContentLength();
     if (len >= 0) {
       return len;
@@ -174,7 +174,7 @@ public class LoggingFilter extends OncePerRequestFilter {
     return (b != null) ? b.length : null;
   }
 
-  private static Integer responseContentLength(ContentCachingResponseWrapper res) {
+  private Integer responseContentLength(ContentCachingResponseWrapper res) {
     String h = res.getHeader("Content-Length");
     if (StringUtils.hasText(h)) {
       try {
@@ -187,12 +187,12 @@ public class LoggingFilter extends OncePerRequestFilter {
   }
 
 
-  private static String headerOrNull(HttpServletRequest req, String name) {
+  private String headerOrNull(HttpServletRequest req, String name) {
     String v = req.getHeader(name);
     return (v == null || v.isBlank()) ? null : v;
   }
 
-  private static String clientIp(HttpServletRequest req) {
+  private String clientIp(HttpServletRequest req) {
     String xff = req.getHeader("X-Forwarded-For");
     if (StringUtils.hasText(xff)) {
       return xff.split(",")[0].trim();
@@ -216,7 +216,7 @@ public class LoggingFilter extends OncePerRequestFilter {
     return body;
   }
 
-  private static boolean readableMediaType(String contentType) {
+  private boolean readableMediaType(String contentType) {
     if (!StringUtils.hasText(contentType)) {
       return false;
     }
@@ -246,7 +246,7 @@ public class LoggingFilter extends OncePerRequestFilter {
     }
   }
 
-  private static Map<String, String> headersToMap(HttpServletRequest req) {
+  private Map<String, String> headersToMap(HttpServletRequest req) {
     List<String> names = Collections.list(req.getHeaderNames());
     return names.stream().collect(Collectors.toMap(
         n -> n,
@@ -256,7 +256,7 @@ public class LoggingFilter extends OncePerRequestFilter {
     ));
   }
 
-  private static Map<String, String> headersToMap(HttpServletResponse res) {
+  private Map<String, String> headersToMap(HttpServletResponse res) {
     return res.getHeaderNames().stream().collect(Collectors.toMap(
         n -> n,
         n -> maskHeader(n, new ArrayList<>(res.getHeaders(n))),
@@ -265,7 +265,7 @@ public class LoggingFilter extends OncePerRequestFilter {
     ));
   }
 
-  private static String maskHeader(String name, List<String> values) {
+  private String maskHeader(String name, List<String> values) {
     String lower = name.toLowerCase(Locale.ROOT);
     boolean sensitive = SENSITIVE_HEADERS.contains(lower);
     return values.stream()
@@ -273,14 +273,14 @@ public class LoggingFilter extends OncePerRequestFilter {
         .collect(Collectors.joining("|"));
   }
 
-  private static String initCorrelationId(HttpServletRequest req) {
+  private String initCorrelationId(HttpServletRequest req) {
     String existing = req.getHeader(CORRELATION_ID_KEY);
     String cid = StringUtils.hasText(existing) ? existing : UUID.randomUUID().toString();
     MDC.put(MDC_KEY, cid);
     return cid;
   }
 
-  private static void clearCorrelationId() {
+  private void clearCorrelationId() {
     MDC.remove(MDC_KEY);
   }
 }
