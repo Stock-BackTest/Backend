@@ -1,3 +1,10 @@
 spring:
     application:
       name: backend
+
+logging:
+  http:
+    enabled: true
+    log-headers: true
+    log-bodies: true
+    log-query-string: true
