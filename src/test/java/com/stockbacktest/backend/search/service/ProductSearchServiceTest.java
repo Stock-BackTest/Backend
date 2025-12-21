@@ -44,18 +44,5 @@ class ProductSearchServiceTest {
     assertThat(products.size()).isEqualTo(expectedList.size());
     assertThat(products).containsExactlyInAnyOrderElementsOf(expectedList);
   }
-//
-//  @Test
-//  @DisplayName("Mapper가 예외를 던지면 Service도 동일한 예외를 전파한다")
-//  void Given_MapperThrowsException_When_SearchProductByKeyword_Then_ServiceThrowsSameException() {
-//    // Arrange
-//    Exception ex = new Exception();
-//    given(productMapper.searchProductByKeyword("error")).willThrow(ex);
-//
-//    // Act & Assert
-//    assertThatThrownBy(() -> productSearchService.searchProductByKeyword("error"))
-//        .isSameAs(ex);
-////        .hasMessageContaining("Message");
-//  }
 
 }
