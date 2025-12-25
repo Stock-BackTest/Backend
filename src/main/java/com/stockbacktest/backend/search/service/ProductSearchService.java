@@ -11,7 +11,7 @@ public class ProductSearchService {
 
   private final ProductMapper productMapper;
 
-  public List<String> searchProductByKeyword(String keyword) throws Exception {
+  public List<String> searchProductByKeyword(String keyword) {
     return productMapper.searchProductByKeyword(keyword);
   }
 
