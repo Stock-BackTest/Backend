@@ -1,6 +1,19 @@
 spring:
-    application:
-      name: backend
+  application:
+    name: backend
+  config:
+    import: optional:file:env/.env[.properties]
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ENC(THx1NjxBbLAsjcgiQgZqo/YR9UlYYIJzdjSLS3MljUvgtIEgwPgYjEhEPqKnaRY9SS6h0u41Ux96N3fGUUCskanFTWaxhg/TazFx1TOLv8M=)
+    username: ENC(eAtruiUeModcUuF16Wdz1hq+RwsjI/sJNi4o4WCLQs2Y+jxTUtDyCULQq+dOIaKr)
+    password: ENC(TcCS4ziRXu9/K3LeTKLUwvOYXnaGRgblONODNWiD5cKn1LbjfxcZd/1Zbh9ygt+a)
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    password: ${JASYPT_ENCRYPTOR_PASSWORD}
 
 logging:
   http:
@@ -8,3 +21,8 @@ logging:
     log-headers: true
     log-bodies: true
     log-query-string: true
+
+mybatis:
+  mapper-locations: classpath*:mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
