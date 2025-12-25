@@ -32,7 +32,7 @@ class ProductSearchServiceTest {
   }, delimiter = ';')
   @DisplayName("파라미터로 주어진 keyword가 isin_cd, isin_shrt_cd, security_name에 포함된 결과가 조회 결과로 반환된다.")
   public void Given_Keyword_When_SearchProductByKeyword_Then_Returns_Products(String keyword,
-      String expected) throws Exception {
+      String expected) {
     // Arrange
     List<String> expectedList = Arrays.stream(expected.split("\\|")).toList();
     given(productMapper.searchProductByKeyword(keyword)).willReturn(expectedList);

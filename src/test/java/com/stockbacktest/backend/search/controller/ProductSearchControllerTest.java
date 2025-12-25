@@ -1,7 +1,6 @@
 package com.stockbacktest.backend.search.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
 import com.stockbacktest.backend.common.web.ApiResponse;
@@ -9,14 +8,12 @@ import com.stockbacktest.backend.search.service.ProductSearchService;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.ResponseEntity;
 
 @ExtendWith(MockitoExtension.class)
 class ProductSearchControllerTest {
@@ -42,27 +39,10 @@ class ProductSearchControllerTest {
     given(productSearchService.searchProductByKeyword(keyword)).willReturn(expectedList);
 
     // Action
-    ResponseEntity<ApiResponse> result = productSearchController.search(keyword);
+    ApiResponse result = productSearchController.search(keyword);
 
     // Assert
-    result.getStatusCode().is2xxSuccessful();
-
-    List<String> products = (List<String>) result.getBody().data();
+    List<String> products = (List<String>) result.data();
     assertThat(products).containsExactlyInAnyOrderElementsOf(expectedList);
-  }
-
-
-  @Test
-  @DisplayName("Service가 예외를 던지면 Controller도 동일한 예외를 전파한다")
-  void Given_ServiceThrowsException_When_Search_Then_ControllerThrowsSameException()
-      throws Exception {
-    // Arrange
-    Exception ex = new Exception("Message");
-    given(productSearchService.searchProductByKeyword("error")).willThrow(ex);
-
-    // Act & Assert
-    assertThatThrownBy(() -> productSearchController.search("error"))
-        .isSameAs(ex)
-        .hasMessageContaining("Message");
   }
 }
